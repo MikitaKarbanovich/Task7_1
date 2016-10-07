@@ -21,7 +21,6 @@ namespace Task7_1
             catch (Exception e)
             {
                 Console.WriteLine("Error: something is broken", e.Message);
-                Log(ioEx.Message);
                 Console.ReadKey();
             }
 
