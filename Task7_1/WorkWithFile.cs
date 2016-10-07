@@ -7,51 +7,70 @@ namespace Task7_1
 {
     public class WorkWithFile
     {
-        string pathToReadFile = string.Empty;
-        public void SetUpPath()
+        public string PathToReadFile { get; set; }
+        const string EXTENSION = ".txt";
+        public void Start()
         {
-            bool isValidPath=false;
-            const string EXTENSION = ".txt";
+            bool isValidFile = false;
+            while (!isValidFile)
+            {
+                try
+                {
+                    System.Console.WriteLine("Enter the path, where you want to read the txt file.");
+                    this.SetUpPath();
+                    this.ShowFirstCharOfValidString();
+                    isValidFile = true;
+                }
+                catch (EmptyFileException emptyFileException)
+                {
+                    Console.WriteLine("Error: File is empty.");
+                    Logger.AddToLog(emptyFileException);
+                }
+            }
+        }
+        private void SetUpPath()
+        {
+            bool isValidPath = false;
             string keyboardInput = Console.ReadLine();
             while (!isValidPath)
             {
                 try
                 {
-                    if (!Path.GetExtension(keyboardInput).Equals(EXTENSION))
-                    {
-                        throw new InvalidExtensionException($"Error: File by path {keyboardInput} has invalid extension.\n");
-                    }
                     if (!File.Exists(keyboardInput))
                     {
-                        throw new FileNotFoundException($"Error: File isn't found by path {keyboardInput}.\n");
+                        throw new FileNotFoundException($"Error: File is't found by path {keyboardInput}.{Environment.NewLine}");
+                    }
+                    if (!Path.GetExtension(keyboardInput).Equals(EXTENSION))
+                    {
+                        throw new InvalidExtensionException($"Error: File by path {keyboardInput} has invalid extension.{Environment.NewLine}");
                     }
                     isValidPath = true;
-                }
-                catch (InvalidExtensionException invalidExtensionException)
-                {
-                    Console.WriteLine("Bad expension in path, try again.");
-                    Logger.AddToLog(invalidExtensionException.Message);
-                    keyboardInput = Console.ReadLine();
                 }
                 catch (FileNotFoundException fileNotFoundException)
                 {
                     Console.WriteLine("Bad path, try again.");
-                    Logger.AddToLog(fileNotFoundException.Message);
+                    Logger.AddToLog(fileNotFoundException);
+                    keyboardInput = Console.ReadLine();
+                }
+                catch (InvalidExtensionException invalidExtensionException)
+                {
+                    Console.WriteLine("Bad extension in path, try again.");
+                    Logger.AddToLog(invalidExtensionException);
                     keyboardInput = Console.ReadLine();
                 }
             }
-            this.pathToReadFile = keyboardInput;
+            this.PathToReadFile = keyboardInput;
         }
 
-        public void ReadFromFile()
+        private void ShowFirstCharOfValidString()
         {
-            StreamReader fs = new StreamReader(pathToReadFile);
+            StreamReader fs = new StreamReader(PathToReadFile);
             string temp = String.Empty;
             int stringCounter = 0;
             temp = fs.ReadLine();
             if (temp == null)
             {
-                throw new EmptyFileException("Error: File is empty.\n");
+                throw new EmptyFileException($"Error: File is empty.{Environment.NewLine}");
             }
             while (temp != null)
             {
@@ -60,7 +79,7 @@ namespace Task7_1
                     stringCounter++;
                     if (temp.Equals(String.Empty))
                     {
-                        throw new EmptyStringException($"Error: Empty string № {stringCounter}.\n");
+                        throw new EmptyStringException($"Error: Empty string № {stringCounter}.{Environment.NewLine}");
                     }
                     else
                     {
@@ -70,13 +89,14 @@ namespace Task7_1
                 catch (EmptyStringException emptyStringException)
                 {
                     Console.WriteLine("Error: Empty string.");
-                    Logger.AddToLog(emptyStringException.Message);
+                    Logger.AddToLog(emptyStringException);
                 }
                 finally
                 {
                     temp = fs.ReadLine();
                 }
             }
+            fs.Close();
         }
     }
 }

@@ -7,22 +7,14 @@ namespace Task7_1
     {
         static void Main(string[] args)
         {
-            try
-            {
+            try {
                 WorkWithFile wwf = new WorkWithFile();
-                System.Console.WriteLine("Enter the path, where you want to create the folder.");
-                wwf.SetUpPath();
-                wwf.ReadFromFile();
-            }
-            catch (EmptyFileException emptyFileException)
-            {
-                Console.WriteLine("Error: File is empty.");
-                Logger.AddToLog(emptyFileException.Message);
-            }
+                wwf.Start();
+                    }
             catch (Exception e)
             {
                 Console.WriteLine("Error: Something is broken", e.Message);
-                Logger.AddToLog(e.Message);
+                Logger.AddToLog(e);
             }
             Console.ReadKey();
         }

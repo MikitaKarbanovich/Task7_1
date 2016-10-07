@@ -7,14 +7,14 @@ namespace Task7_1
 {
     public static class Logger
     {
-        public static void AddToLog(string message)
+        public static void AddToLog(Exception e)
         {
             DateTime localDate = DateTime.Now;
-            string PATHTOLOG = @"D:\logger.txt";
+            string PATHTOLOG = Environment.CurrentDirectory+"\\logger.txt";
             File.AppendAllText(PATHTOLOG, "[" +
                 localDate.ToString("G", CultureInfo.CreateSpecificCulture("ru-RU")) +
-                "] " +
-                message);
+                "] " + e.GetType().FullName+
+                e.Message);
         }
     }
 }
