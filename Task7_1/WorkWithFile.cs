@@ -1,64 +1,82 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Task7_1.Exceptions;
 
 namespace Task7_1
 {
     public class WorkWithFile
     {
         string pathToReadFile = string.Empty;
-        public void SetPath()
+        public void SetUpPath()
         {
+            bool isValidPath=false;
+            const string EXTENSION = ".txt";
             string keyboardInput = Console.ReadLine();
-            while (!File.Exists(keyboardInput))
+            while (!isValidPath)
             {
-                Console.WriteLine("Bad path, try again.");
-                Log($"Error: File isn't found by path { keyboardInput}.\n");
-                keyboardInput = Console.ReadLine();
+                try
+                {
+                    if (!Path.GetExtension(keyboardInput).Equals(EXTENSION))
+                    {
+                        throw new InvalidExtensionException($"Error: File by path {keyboardInput} has invalid extension.\n");
+                    }
+                    if (!File.Exists(keyboardInput))
+                    {
+                        throw new FileNotFoundException($"Error: File isn't found by path {keyboardInput}.\n");
+                    }
+                    isValidPath = true;
+                }
+                catch (InvalidExtensionException invalidExtensionException)
+                {
+                    Console.WriteLine("Bad expension in path, try again.");
+                    Logger.AddToLog(invalidExtensionException.Message);
+                    keyboardInput = Console.ReadLine();
+                }
+                catch (FileNotFoundException fileNotFoundException)
+                {
+                    Console.WriteLine("Bad path, try again.");
+                    Logger.AddToLog(fileNotFoundException.Message);
+                    keyboardInput = Console.ReadLine();
+                }
             }
             this.pathToReadFile = keyboardInput;
         }
+
         public void ReadFromFile()
         {
-            try
+            StreamReader fs = new StreamReader(pathToReadFile);
+            string temp = String.Empty;
+            int stringCounter = 0;
+            temp = fs.ReadLine();
+            if (temp == null)
             {
-                StreamReader fs = new StreamReader(pathToReadFile);
-                string temp = String.Empty;
-                int stringCounter = 0;
-                while (fs.ReadLine() != null)
+                throw new EmptyFileException("Error: File is empty.\n");
+            }
+            while (temp != null)
+            {
+                try
                 {
                     stringCounter++;
-                    temp = fs.ReadLine();
-                    if (!temp.Equals(String.Empty))
+                    if (temp.Equals(String.Empty))
                     {
-                        Console.WriteLine(temp.First());
+                        throw new EmptyStringException($"Error: Empty string № {stringCounter}.\n");
                     }
                     else
                     {
-                        Console.WriteLine("Error: Empty string.");
-                        Log($"Error: Empty string №{ stringCounter}.\n");
+                        Console.WriteLine(temp.First());
                     }
                 }
-
+                catch (EmptyStringException emptyStringException)
+                {
+                    Console.WriteLine("Error: Empty string.");
+                    Logger.AddToLog(emptyStringException.Message);
+                }
+                finally
+                {
+                    temp = fs.ReadLine();
+                }
             }
-            catch (FileNotFoundException ioEx)
-            {
-                Console.WriteLine(ioEx.Message);
-                Log(ioEx.Message);
-            }
-        }
-        public static void Log(string message)
-        {
-            DateTime localDate = DateTime.Now;
-            string PATHTOLOG = @"D:\logger.txt";
-            File.AppendAllText(PATHTOLOG, "[" +
-                localDate.ToString("G", CultureInfo.CreateSpecificCulture("ru-RU")) +
-                "] " +
-                message);
         }
     }
 }

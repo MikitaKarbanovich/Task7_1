@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Task7_1.Exceptions;
 
 namespace Task7_1
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -14,16 +11,20 @@ namespace Task7_1
             {
                 WorkWithFile wwf = new WorkWithFile();
                 System.Console.WriteLine("Enter the path, where you want to create the folder.");
-                wwf.SetPath();
+                wwf.SetUpPath();
                 wwf.ReadFromFile();
-                Console.ReadKey();
+            }
+            catch (EmptyFileException emptyFileException)
+            {
+                Console.WriteLine("Error: File is empty.");
+                Logger.AddToLog(emptyFileException.Message);
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error: something is broken", e.Message);
-                Console.ReadKey();
+                Console.WriteLine("Error: Something is broken", e.Message);
+                Logger.AddToLog(e.Message);
             }
-
+            Console.ReadKey();
         }
     }
 }

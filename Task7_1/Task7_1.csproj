@@ -43,6 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\EmptyFileException.cs" />
+    <Compile Include="Exceptions\EmptyStringException.cs" />
+    <Compile Include="Exceptions\InvalidExtentionException.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorkWithFile.cs" />
