@@ -7,7 +7,7 @@ namespace Task7_1
 {
     public class WorkWithFile
     {
-        public string PathToReadFile { get; set; }
+        private string pathToReadFile;
         const string EXTENSION = ".txt";
         public void Start()
         {
@@ -59,12 +59,12 @@ namespace Task7_1
                     keyboardInput = Console.ReadLine();
                 }
             }
-            this.PathToReadFile = keyboardInput;
+            this.pathToReadFile = keyboardInput;
         }
 
         private void ShowFirstCharOfValidString()
         {
-            StreamReader fs = new StreamReader(PathToReadFile);
+            StreamReader fs = new StreamReader(pathToReadFile);
             string temp = String.Empty;
             int stringCounter = 0;
             temp = fs.ReadLine();
