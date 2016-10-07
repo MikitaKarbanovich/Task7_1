@@ -7,10 +7,11 @@ namespace Task7_1
     {
         static void Main(string[] args)
         {
-            try {
-                WorkWithFile wwf = new WorkWithFile();
-                wwf.Start();
-                    }
+            try
+            {
+                WorkWithFile workWithFile = new WorkWithFile();
+                workWithFile.Start();
+            }
             catch (Exception e)
             {
                 Console.WriteLine("Error: Something is broken", e.Message);
